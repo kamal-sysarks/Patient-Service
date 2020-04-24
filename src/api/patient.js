@@ -69,17 +69,17 @@ module.exports = (app, options) => {
       }      
     })
 
-    app.post('/patient/profile', upload.single('avatar'), async (req, res) => {
+    app.post('/patient/profile', auth, upload.single('avatar'), async (req, res) => {
       const buffer = await sharp(req.file.buffer).resize({width: 320, height:320}).png().toBuffer();   
       
       req.user.avatar = buffer;
         await req.user.save();
-        res.send();
+        res.send("Profile Pic Uploaded.");
      },(error, req, res, next) =>{
         res.status(400).send({error: error.message});
      })
 
-     app.get('/patient/:id/avatar', async (req, res) => {
+    app.get('/patient/:id/avatar', async (req, res) => {
       try{
         const user = await Patient.findById(req.params.id);
 
@@ -102,7 +102,7 @@ module.exports = (app, options) => {
           // console.log("Inside patient" + result);
           res.status(200).send(result);
         }).catch(err => {
-          res.send(err);
+          res.status(500).send(err);
         })
     })
 
@@ -112,7 +112,7 @@ module.exports = (app, options) => {
           // console.log("Inside patient" + result);
           res.status(200).send(result);
         }).catch(err => {
-          res.send(err);
+          res.status(404).send(err);
         })
     })
   }

@@ -14,6 +14,10 @@ const combineSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    patient_pic:{
+        type: Buffer,
+        
+    },
     date: {
         type: Date,
         required: true,

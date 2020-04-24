@@ -48,7 +48,7 @@ const repository = (db) => {
     try {
       const patient = await Patient.findById(val.patient_id);
       console.log(patient);
-      const value = await new CombineCollection({...val, patient_name: patient.name});
+      const value = await new CombineCollection({...val, patient_name: patient.name, patient_pic: patient.avatar});
       const savedUser =  await value.save();
       console.log(savedUser);
       // const user = new CombineCollection(patient);
