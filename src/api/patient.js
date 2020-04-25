@@ -4,26 +4,24 @@ const sharp = require('sharp');
 const Patient = require("../models/users");
 
 module.exports = (app, options) => {
-    app.post('/registerPatient', async (req, res, next) => {
-        await options.patientRegister(req.body)
-        .then(result => {
-          console.log("Inside patient:" + result);
-          res.status(200).send(result);
-        }).catch(err => {
-          res.send(err);
-        }).catch(next);
+    app.post('/registerPatient', async (req, res) => {
+      try {
+        const user = await options.patientRegister(req.body)
+        res.status(201).send(user);
+      } catch (error) {
+        res.status(500).send({error: error.message});
+      }
     })
 
-    app.post('/loginPatient', async (req, res, next) => {
-        await options.patientLogin(req.body)
-        .then(result => {
-          if(!result){
-            return res.status(404).send("User doesn't exists");
-          }
-          res.status(200).send(result);
-        }).catch(err => {
-          res.status(500).send(err);
-        }).catch(next);
+    app.post('/loginPatient', async (req, res) => {
+      
+      try {
+        const user = await options.patientLogin(req.body) 
+        res.status(200).send(user);
+      } catch (error) {
+        res.status(404).send({error: error.message});
+      }
+       
     })
 
     app.post('/logoutPatient', auth, async (req,res) => {
@@ -32,7 +30,7 @@ module.exports = (app, options) => {
             return token.token !== req.token;
         });
         await req.user.save();
-        res.send('User logged out');
+        res.status(200).send('User logged out');
       } catch (error) {
         res.status(500).send('Something Went Wrong'+ error)
       }
@@ -42,19 +40,19 @@ module.exports = (app, options) => {
       try { 
         req.user.tokens = [];
         await req.user.save();
-        res.send('User logged out from All Devices.');
+        res.status(200).send('User logged out from All Devices.');
       } catch (error) {
         res.status(500).send('Something Went Wrong'+ error)
       }
     })
   
-    app.get('/getAllPatient', auth, async (req, res, next) => {
-     await options.allPatient()
-        .then(result => {
+    app.get('/getAllPatient', auth, async (req, res) => {
+        try {
+          const result =  await options.allPatient()
           res.status(200).send(result);
-        }).catch(err => {
-          res.send(err);
-        }).catch(next)
+        } catch (error) {
+          res.status(404).send({error: error.message});
+        }
     })
 
     const upload = multer({
@@ -74,7 +72,7 @@ module.exports = (app, options) => {
       
       req.user.avatar = buffer;
         await req.user.save();
-        res.send("Profile Pic Uploaded.");
+        res.status(201).send("Profile Pic Uploaded.");
      },(error, req, res, next) =>{
         res.status(400).send({error: error.message});
      })
@@ -88,31 +86,30 @@ module.exports = (app, options) => {
         }
 
         res.set('Content-Type', 'image/png');
-        res.send(user.avatar);
+        res.status(200).send(user.avatar);
 
       }catch(error){
         console.log(error);
-        res.status(404).send();
+        res.status(404).send({error:"User not exist or User doesn't have pic."});
       }
     });
 
     app.post('/bookAppointment', auth, async (req, res) => {
-      await options.bookAppointment(req.body)
-        .then(result => {
-          // console.log("Inside patient" + result);
-          res.status(200).send(result);
-        }).catch(err => {
-          res.status(500).send(err);
-        })
+      try {
+        const result = await options.bookAppointment(req.body)
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({error: error.message});
+      }
+      
     })
 
     app.post('/getAllPatientByDoctorID', async (req, res) => {
-      await options.getAllPatientByDoctorID(req.body)
-        .then(result => {
-          // console.log("Inside patient" + result);
-          res.status(200).send(result);
-        }).catch(err => {
-          res.status(404).send(err);
-        })
+      try {
+        const result = await options.getAllPatientByDoctorID(req.body)
+        res.status(200).send(result);  
+      } catch (error) {
+        res.status(404).send({error: error.message});
+      }
     })
   }

@@ -12,7 +12,7 @@ const repository = (db) => {
       return {savedUser, token};
     } catch (error) {
       console.log(error);
-      return error;
+      throw new Error(error);
     }
       
   }
@@ -23,9 +23,9 @@ const repository = (db) => {
         const user = await Patient.findByCredentials(patient.email, patient.password);
       const token = await user.generateAuthToken();
       return {user, token};
-      }catch(e){
-        console.log(e);
-        return e;
+      }catch(error){
+        console.log("Error" + error);
+         throw new Error(error);
       }
 
 
@@ -38,7 +38,7 @@ const repository = (db) => {
       return patients;  
     } catch (error) {
       console.log("error:" + error);
-      return error;
+      throw new Error(error);
     }
     
   }
@@ -50,13 +50,10 @@ const repository = (db) => {
       console.log(patient);
       const value = await new CombineCollection({...val, patient_name: patient.name, patient_pic: patient.avatar});
       const savedUser =  await value.save();
-      console.log(savedUser);
-      // const user = new CombineCollection(patient);
-      // const savedUser =  await user.save();
        return savedUser; 
     } catch (error) {
       console.log("error:" + error);
-      return error;
+      throw new Error(error);
     }
     
   }
@@ -64,14 +61,11 @@ const repository = (db) => {
   const getAllPatientByDoctorID = async (id) => {
     
     try {
-      // const user = new CombineCollection(patient);
-      // const savedUser =  await user.save();
-      // return savedUser; 
       const val = await CombineCollection.findPatientsByID(id);
       return val;
     } catch (error) {
       console.log("error:" + error);
-      return error;
+      throw new Error(error);
     }
     
   }
@@ -88,7 +82,6 @@ const repository = (db) => {
     getAllPatientByDoctorID,
     disconnect
   })
- // console.log(obj.patientRegister);
   return obj;
 }
 
@@ -97,7 +90,6 @@ const connect = (connection) => {
     if (!connection) {
       reject(new Error('Database Not Connected'));
     }
-   // console.log(connection);
     resolve(repository(connection));
     
   })
