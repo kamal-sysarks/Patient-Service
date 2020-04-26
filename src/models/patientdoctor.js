@@ -14,17 +14,16 @@ const combineSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    patient_pic:{
-        type: Buffer,
+    // patient_pic:{
+    //     type: Buffer,
         
-    },
+    // },
     date: {
         type: Date,
         required: true,
-        default: Date.now
     },
     time: {
-        type: Date,
+        type: String,
         required: true
     },
     description: {
