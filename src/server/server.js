@@ -4,7 +4,6 @@ const morgan = require('morgan');
 const winston = require('winston');
 require('winston-mongodb');
 const api = require('../api/patient');
-const {dbSettings} = require('../config/config');
 
 const start = (options) => {
     return new Promise((resolve, reject) => {
@@ -21,15 +20,20 @@ const start = (options) => {
       
 
       try {
-        const logger = winston.createLogger({
-         
-          
+        const logger = new winston.createLogger({  
           transports: [
             new winston.transports.MongoDB({
               level: 'info',
-              db: 'mongodb://127.0.0.1:27017/flutterPOC',
+              db: 'mongodb+srv://sysarks02:admin123@sysarks01-lyts7.mongodb.net/test?retryWrites=true&w=majority',
               options: {useUnifiedTopology: true},
-              collection: 'patient_log' 
+              collection: 'patient_log',
+              prettyPrint: true,
+              format: winston.format.combine(
+                winston.format.timestamp({
+                  format: 'YYYY-MM-DD HH:mm:ss'
+                }),
+                winston.format.json()
+              ),
             })
           ]
         });
