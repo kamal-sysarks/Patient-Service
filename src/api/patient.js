@@ -4,19 +4,19 @@ const sharp = require('sharp');
 const Patient = require("../models/users");
 
 module.exports = (app, options) => {
-    app.post('/registerPatient', async (req, res) => {
+    app.post('/signUpPatient', async (req, res) => {
       try {
-        const user = await options.patientRegister(req.body)
+        const user = await options.signUpPatient(req.body)
         res.status(201).send(user);
       } catch (error) {
         res.status(500).send({error: error.message});
       }
     })
 
-    app.post('/loginPatient', async (req, res) => {
+    app.post('/signInPatient', async (req, res) => {
       
       try {
-        const user = await options.patientLogin(req.body) 
+        const user = await options.signInPatient(req.body) 
         res.status(200).send(user);
       } catch (error) {
         res.status(404).send({error: error.message});
@@ -24,19 +24,19 @@ module.exports = (app, options) => {
        
     })
 
-    app.post('/logoutPatient', auth, async (req,res) => {
-      try { 
-        req.user.tokens = req.user.tokens.filter((token) => {
-            return token.token !== req.token;
-        });
-        await req.user.save();
-        res.status(200).send('User logged out');
+    app.get('/signOutPatient', auth, async (req,res) => {
+      try {
+        const user = await options.signOutPatient(req);
+        if(user === ''){
+          res.status(500).send('Something Went Wrong');
+        }
+        res.status(200).send(user);
       } catch (error) {
-        res.status(500).send('Something Went Wrong'+ error)
+        res.status(500).send('Error: '+ error)
       }
     })
 
-    app.post('/logoutPatientAll', auth, async (req, res) => {
+    app.post('/signOutPatientAll', auth, async (req, res) => {
       try { 
         req.user.tokens = [];
         await req.user.save();
@@ -46,9 +46,9 @@ module.exports = (app, options) => {
       }
     })
   
-    app.get('/getAllPatient', auth, async (req, res) => {
+    app.get('/getPatientsList', auth, async (req, res) => {
         try {
-          const result =  await options.allPatient()
+          const result =  await options.getPatientsList()
           res.status(200).send(result);
         } catch (error) {
           res.status(404).send({error: error.message});
@@ -67,7 +67,7 @@ module.exports = (app, options) => {
       }      
     })
 
-    app.post('/patient/profile', auth, upload.single('avatar'), async (req, res) => {
+    app.post('/patient/avatar', auth, upload.single('avatar'), async (req, res) => {
       const buffer = await sharp(req.file.buffer).resize({width: 320, height:320}).png().toBuffer();   
       
       req.user.avatar = buffer;
@@ -104,9 +104,9 @@ module.exports = (app, options) => {
       
     })
 
-    app.post('/getAllPatientByDoctorID', async (req, res) => {
+    app.post('/getPatientListBySpecialist', async (req, res) => {
       try {
-        const result = await options.getAllPatientByDoctorID(req.body)
+        const result = await options.getPatientsListBySpecialist(req.body)
         res.status(200).send(result);  
       } catch (error) {
         res.status(404).send({error: error.message});

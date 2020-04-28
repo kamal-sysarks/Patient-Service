@@ -1,6 +1,6 @@
 const dbSettings = {
-    db: process.env.DB || 'flutter-poc',
-    dboptions: {
+    db: process.env.DB,
+    dbOptions: {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true,

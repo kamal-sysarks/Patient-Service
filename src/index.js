@@ -1,4 +1,5 @@
 'use strict'
+require('dotenv').config();
 const {EventEmitter} = require('events');
 const server = require('./server/server');
 const repository = require('./repository/repository');

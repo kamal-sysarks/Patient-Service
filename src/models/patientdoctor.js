@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const logger = require('./../config/logger').logger;
 
-const combineSchema = new mongoose.Schema({
+const bookingSchema = new mongoose.Schema({
     doctor_id: {
         type: mongoose.Schema.Types.ObjectId,
         unique: false
@@ -31,19 +32,20 @@ const combineSchema = new mongoose.Schema({
     }   
 });
 
-combineSchema.index({doctor_id : 1, patient_id: 1}, {unique: true});
+bookingSchema.index({doctor_id : 1, patient_id: 1}, {unique: true});
 
-combineSchema.statics.findPatientsByID = async (id) => {
+bookingSchema.statics.findPatientsByID = async (id) => {
     const doctor_id = id.doctor_id;
     const result = await CombineCollection.find({doctor_id});
     console.log(result);
     if(result.length === 0){
+        logger.error("Specialist Doesn't have Appointments.");
         throw new Error("Specialist Doesn't have Appointments.");
     }
     return result;
     // console.log("Hello " + result);
 }
 
-const CombineCollection = mongoose.model('combineCollection', combineSchema);
+const CombineCollection = mongoose.model('BookingDetails', bookingSchema);
 
 module.exports = CombineCollection;

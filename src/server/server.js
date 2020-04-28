@@ -1,8 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const winston = require('winston');
-require('winston-mongodb');
+const logger = require('./../config/logger').logger;
 const api = require('../api/patient');
 
 const start = (options) => {
@@ -20,23 +19,6 @@ const start = (options) => {
       
 
       try {
-        const logger = new winston.createLogger({  
-          transports: [
-            new winston.transports.MongoDB({
-              level: 'info',
-              db: 'mongodb+srv://sysarks02:admin123@sysarks01-lyts7.mongodb.net/test?retryWrites=true&w=majority',
-              options: {useUnifiedTopology: true},
-              collection: 'patient_log',
-              prettyPrint: true,
-              format: winston.format.combine(
-                winston.format.timestamp({
-                  format: 'YYYY-MM-DD HH:mm:ss'
-                }),
-                winston.format.json()
-              ),
-            })
-          ]
-        });
         logger.stream = { 
           write: function(message, encoding){ 
             console.log(message);
@@ -46,15 +28,9 @@ const start = (options) => {
         app.use(morgan('dev',{ "stream": logger.stream }));  
       } catch (error) {
         console.log(error);
+        logger.error(`Error: Connecting morgan with winston.`);
       }
-       
-      
     //   app.use(helmet())
-      app.use((err, req, res, next) => {
-        reject(new Error('Something went wrong!, err:' + err))
-        res.status(500).send('Something went wrong!')
-      })
-
       api(app, options.repo);
   
       const server = app.listen(options.port, () => resolve(server))

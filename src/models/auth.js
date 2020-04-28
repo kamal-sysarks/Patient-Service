@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('./users');
+const logger = require('./../config/logger').logger;
 
 const  auth = async (req, res, next) => {
     try {
@@ -12,10 +13,12 @@ const  auth = async (req, res, next) => {
         }
 
         req.token = token;
-        console.log(req.token);
+       // console.log(req.token);
         req.user = user;
+        logger.info("User Authenticated");
         next(); 
     } catch (error) {
+        logger.error("Authentication Failed.");
         res.status(401).send({error: 'Please authenticate'});
     }
 }
