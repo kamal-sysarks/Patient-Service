@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const logger = require('./../config/logger').logger;
+const logger = require('../db/logger').logger;
 
 var uniqueValidator = require('mongoose-unique-validator');
 
@@ -71,7 +71,7 @@ userSchema.methods.toJSON =  function() {
 userSchema.methods.generateAuthToken = async function(){
     try {
         const user = this;
-        const token = jwt.sign({_id: user._id.toString()}, 'flutterPOC');
+        const token = jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET);
         user.tokens = user.tokens.concat({token});
         await user.save();
         return token;

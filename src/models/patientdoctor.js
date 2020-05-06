@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const logger = require('./../config/logger').logger;
+const logger = require('./../db/logger').logger;
 
 const bookingSchema = new mongoose.Schema({
     doctor_id: {

@@ -1,9 +1,9 @@
 'use strict'
 const Patient = require("../models/users");
 const CombineCollection = require("../models/patientdoctor");
-const logger = require('./../config/logger').logger;
+const logger = require('../db/logger').logger;
 
-const repository = (db) => {
+
   
   const signUpPatient = async (patient) => {
     try {
@@ -97,9 +97,6 @@ const repository = (db) => {
     
   }
 
-  const disconnect = () => {
-    db.close()
-  }
 
   const obj = Object.create({
     signUpPatient,
@@ -107,20 +104,9 @@ const repository = (db) => {
     signOutPatient,
     getPatientsList,
     bookAppointment,
-    getPatientsListBySpecialist,
-    disconnect
+    getPatientsListBySpecialist
   })
-  return obj;
-}
 
-const connect = (connection) => {
-  return new Promise((resolve, reject) => {
-    if (!connection) {
-      reject(new Error('Database Not Connected'));
-    }
-    resolve(repository(connection));
-    
-  })
-}
 
-module.exports = Object.assign({}, {connect})
+
+module.exports = obj;

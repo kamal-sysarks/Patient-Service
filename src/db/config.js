@@ -1,6 +1,6 @@
 const dbSettings = {
     db: process.env.DB,
-    dbOptions: {
+    options: {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true,
