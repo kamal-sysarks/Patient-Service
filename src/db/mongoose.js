@@ -1,3 +1,5 @@
+// Connecting to MongoDB Database
+
 const mongoose = require('mongoose');
 const {dbSettings} = require('./config');
 const logger = require('./logger').logger;

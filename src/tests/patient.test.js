@@ -1,3 +1,5 @@
+// Integration Testing Using Jest test framework and Supertest.
+
 const request = require('supertest');
 const app = require('../server/server');
 

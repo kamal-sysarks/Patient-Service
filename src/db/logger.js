@@ -1,3 +1,5 @@
+// Logging Data to MongoDB Database
+
 const winston = require('winston');
 require('winston-mongodb');
 

@@ -1,3 +1,5 @@
+// Creating Server using Express, Logging HTTP requests using morgan
+
 const express = require('express');
 const logger = require('../db/logger').logger;
 require('../db/mongoose');

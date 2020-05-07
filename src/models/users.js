@@ -1,3 +1,5 @@
+// Patient Schema and Model to store in Database
+
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
@@ -6,7 +8,7 @@ const logger = require('../db/logger').logger;
 
 var uniqueValidator = require('mongoose-unique-validator');
 
-const userSchema = new mongoose.Schema({
+const patientSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -58,7 +60,8 @@ const userSchema = new mongoose.Schema({
     timestamps: true
 });
 
-userSchema.methods.toJSON =  function() {
+// Patient object to return as response to SignIn and SignUp request
+ patientSchema.methods.toJSON =  function() {
     const user = this;
     const userObject = user.toObject();
 
@@ -68,7 +71,8 @@ userSchema.methods.toJSON =  function() {
     return userObject;
 }
 
-userSchema.methods.generateAuthToken = async function(){
+// Generating JWT Authentication token 
+patientSchema.methods.generateAuthToken = async function(){
     try {
         const user = this;
         const token = jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET);
@@ -83,8 +87,8 @@ userSchema.methods.generateAuthToken = async function(){
     }
 }
 
-
-userSchema.statics.findByCredentials = async (email, password) => {
+// Find Patient Based Credentials Email and Password
+patientSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({email});
 
     if(!user){
@@ -102,10 +106,10 @@ userSchema.statics.findByCredentials = async (email, password) => {
     return user;
 }
 
-userSchema.plugin(uniqueValidator);
+patientSchema.plugin(uniqueValidator);
 
-// Hashing the password
-userSchema.pre('save', async function (next){
+// Hashing the password before saving patient
+patientSchema.pre('save', async function (next){
     const user = this;
 
     if(user.isModified('password')){
@@ -116,6 +120,7 @@ userSchema.pre('save', async function (next){
     next();
 });
 
-const User = mongoose.model('patient', userSchema);
+// 
+const Patient = mongoose.model('patient', patientSchema);
 
-module.exports = User;
+module.exports = Patient;

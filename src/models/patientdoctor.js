@@ -1,3 +1,5 @@
+// Booking Appointment Schema and Model to store in Database
+
 const mongoose = require('mongoose');
 const logger = require('./../db/logger').logger;
 

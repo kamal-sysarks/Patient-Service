@@ -1,3 +1,5 @@
+// Starting Point of the Patient Service
+
 const app = require('./../src/server/server');
 const {serverSettings} = require('./../src/db/config');
 

@@ -1,10 +1,12 @@
+// API Endpoints of Patients Service.
+
 const express = require('express');
 const router = new express.Router();
 const auth = require('../models/auth');
 const Patient = require("../models/users");
 const options = require('../repository/repository');
 
-
+// SignUp Patient Endpoint
     router.post('/signUpPatient', async (req, res) => {
       try {
         const user = await options.signUpPatient(req.body)
@@ -14,8 +16,8 @@ const options = require('../repository/repository');
       }
     })
 
+// SignIn Patient Endpoint
     router.post('/signInPatient', async (req, res) => {
-      
       try {
         const user = await options.signInPatient(req.body) 
         res.status(200).send(user);
@@ -25,6 +27,7 @@ const options = require('../repository/repository');
        
     })
 
+// SignOut Patient Endpoint
     router.get('/signOutPatient', auth, async (req,res) => {
       try {
         const user = await options.signOutPatient(req);
@@ -37,6 +40,7 @@ const options = require('../repository/repository');
       }
     })
 
+// Getting PatientsList Endpoint
     router.get('/getPatientsList', async (req, res) => {
         try {
           const result =  await options.getPatientsList()
@@ -47,7 +51,7 @@ const options = require('../repository/repository');
     })
 
    
-
+// Booking Appointment with Specialist Endpoint
   router.post('/bookAppointment', auth, async (req, res) => {
     try {
       const result = await options.bookAppointment(req.body)
@@ -58,6 +62,7 @@ const options = require('../repository/repository');
     
   })
 
+// Getting PatientsList By Specialist ID Endpoint
   router.post('/getPatientListBySpecialist', async (req, res) => {
     try {
       const result = await options.getPatientsListBySpecialist(req.body)

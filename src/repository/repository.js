@@ -1,4 +1,5 @@
-'use strict'
+// Repository contains  methods that interact with Database
+
 const Patient = require("../models/users");
 const CombineCollection = require("../models/patientdoctor");
 const logger = require('../db/logger').logger;

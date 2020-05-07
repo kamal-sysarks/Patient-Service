@@ -1,3 +1,5 @@
+// DB Settings and Server Settings 
+
 const dbSettings = {
     db: process.env.DB,
     options: {

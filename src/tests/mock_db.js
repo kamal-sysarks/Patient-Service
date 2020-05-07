@@ -1,3 +1,5 @@
+// Some mock Data to execute test suits.
+
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const Patient = require('../models/users');

@@ -1,3 +1,5 @@
+// Authenticating User to access certain Endpoints using JWT(JSON Web Token).
+
 const jwt = require('jsonwebtoken');
 const User = require('./users');
 const logger = require('../db/logger').logger;
