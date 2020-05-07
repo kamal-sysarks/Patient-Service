@@ -1,25 +1,9 @@
 const request = require('supertest');
 const app = require('../server/server');
-const User = require('../models/users');
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
 
-const userOneId = new mongoose.Types.ObjectId();
-const userOne = {
-    _id: userOneId,
-    "name": "Aatresh",
-    "email": "aatresh@g.com",
-    "password": "aatresh12345",
-    "phone": 8989899898,
-    tokens: [{
-        token: jwt.sign({_id: userOneId}, process.env.JWT_SECRET)
-    }]        
-}
+const { patientOne, setUpDB} = require('./mock_db');
 
-beforeEach(async () => {
-    await User.deleteMany();
-    await new User(userOne).save();
-})
+beforeEach(setUpDB)
 
 test("Should signup a new user", async () => {
     // console.log(server);
@@ -33,8 +17,8 @@ test("Should signup a new user", async () => {
 
 test("Should login a user", async () => {
     await request(app).post('/signInPatient').send({
-        "email": userOne.email,
-        "password": userOne.password
+        "email": patientOne.email,
+        "password": patientOne.password
     }).expect(200)
 })
 
@@ -45,9 +29,13 @@ test("Should not login non existing User", async () => {
     }).expect(404)
 })
 
+test("Should get Patients List", async () => {
+    await request(app).get('/getPatientsList').send().expect(200)
+})
+
 test("Should logout a user", async () => {
     await request(app).get('/signOutPatient')
-        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .set('Authorization', `Bearer ${patientOne.tokens[0].token}`)
         .send()
         .expect(200)
 

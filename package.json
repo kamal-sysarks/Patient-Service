@@ -9,7 +9,8 @@
     "test": "env-cmd ./env/test.env jest --watch"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testTimeout": 30000
   },
   "keywords": [],
   "author": "",

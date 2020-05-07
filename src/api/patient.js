@@ -37,7 +37,7 @@ const options = require('../repository/repository');
       }
     })
 
-    router.get('/getPatientsList', auth, async (req, res) => {
+    router.get('/getPatientsList', async (req, res) => {
         try {
           const result =  await options.getPatientsList()
           res.status(200).send(result);
